@@ -5,15 +5,17 @@ import SimpleOpenNI.*;
 SimpleOpenNI  context;
 
 boolean recording=false;
-int startAt=30;//minute
-int duration=30000;//in milliseconds / 30 seconds
+int startAt=0;//minute
+int duration=60000;//in milliseconds / 30 seconds
 int start=0;
 int currentTime=0;
+
+int[] recordTime = {0,10,15,20,25,30,35,40,45,50,55};
 
 void setup()
 {
   
-  
+  startAt=minute()+4;
 
   context = new SimpleOpenNI(this);
 
@@ -59,11 +61,13 @@ void setup()
 void draw()
 {
   // update
-  
-  if(recording==false && minute()==startAt && second()==0)
+ for(int i=0;i<11;i++){
+  if(recording==false && minute()==recordTime[i] && second()==0)//startAt
 {
 setupRecording();
+break;
 }
+ }
   
   context.update(); 
   if(recording==true){
@@ -98,7 +102,16 @@ setupRecording();
 
   if(recording==false){
    color(255,0,0);
-   text("starting to record at:"+hour()+":"+startAt+":00",20,20);
+    for(int i=0;i<11;i++){
+  if(recordTime[i]>minute())//startAt
+{
+  startAt=recordTime[i];
+  break;
+}
+    }
+   
+   
+   text("starting to record at:"+hour()+":"+startAt+":00",20,100);
   }    
   
 }
@@ -106,8 +119,29 @@ setupRecording();
 
 void keyPressed()
 {
-  switch(key)
+  switch(keyCode)
   {
+    case UP:
+        startAt++;
+        if(startAt>=60){
+        startAt=0;
+        }
+    break;
+  case DOWN:
+        startAt--;
+    break;
+    
+    /*
+   case RIGHT:
+        startAt++;
+        if(startAt>=60){
+        startAt=0;
+        }
+    break;
+  case LEFT:
+        startAt--;
+    break;
+    */
     
   }
 }
